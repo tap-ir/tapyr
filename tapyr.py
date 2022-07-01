@@ -1,6 +1,7 @@
 #!/usr/bin/python3 -i
 #pytapir is a python client for RESTruct
 
+import os
 import requests
 import json
 import time 
@@ -72,16 +73,24 @@ class Node(json.JSONEncoder):
     return str(self.__dict__) 
 
 class Tapir():
-  def __init__(self, ip, port, api_key = "key", tls=False):
-    self.ip = ip
-    self.port = port
+  def __init__(self, address = None, api_key = None, tls=False):
+    if address == None:
+      address = os.getenv('TAPIR_ADDRESS')
+      if address == None:
+        address = "127.0.0.1:3583"
+    if api_key == None:
+      api_key = os.getenv('TAPIR_KEY')
+      if api_key == None:
+        api_key = "key"
+    self.ip, self.port = address.split(":")
+    self.key = api_key
     self.requests = requests.Session()
     self.requests.headers.update({"x-api-key" : api_key})
     if tls:
       self.requests.verify = False
-      self.base_url = "https://" + ip + ":" + port + "/api"
+      self.base_url = "https://" + self.ip + ":" + self.port + "/api"
     else:
-      self.base_url = "http://" + ip + ":" + port + "/api"
+      self.base_url = "http://" + self.ip + ":" + self.port + "/api"
 
   def attribute_path(self, node, attribute):
     return { "node_id" : node.id, "attribute_name" : attribute }
