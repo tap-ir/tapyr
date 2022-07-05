@@ -2,9 +2,8 @@ from setuptools import setup, find_packages
 
 setup(
     name='tapyr',
-    version='0.1.0',
-    packages=find_packages('src'),
-    package_dir={'' : 'src'},
+    version='0.2.0',
+    packages=["tapyr"],
     url='https://github.com/tap-ir/tapyr',
     license='AGPLv3.0',
     author='Solal Jacob',
